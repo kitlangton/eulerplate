@@ -1,8 +1,6 @@
 # Eulerplate
 
-An an API for querying Project Euler AND a command line tool for creating test folders.
-
-This is a fairly simple gem.
+A command line gem for creating kata boilerplate—specs and folders—for Project Euler problems.
 
 ## Installation
 
@@ -14,17 +12,35 @@ To create a folder in the present working directory just type:
 
     $ eulerplate new PROBLEM_NUMBER
 
-for Problem 8, you will get a new directory:
+for Problem 3, you will get a new directory:
 
- - **8-largest-product-in-a-series**
+ - **3-largest-prime-factor**
 
 And two files in that directory:
 
- - **largest_product_in_a_series.rb**
- - **largest_product_in_a_series_spec.rb**
+ - **largest_prime_factor_spec.rb** with the code:
+```ruby
+# PROBLEM 3: Largest prime factor
+# https://projecteuler.net/problem=3
+#
+# The prime factors of 13195 are 5, 7, 13 and 29.
+# What is the largest prime factor of the number 600851475143 ?
+#
+# WRITE YOUR TESTS!
+require_relative 'largest_prime_factor'
 
-The spec file will come with a pending RSpec test requiring the ruby file.
+describe LargestPrimeFactor do
+    it 'verifies the example' do
+        skip 'write code to verify the example'
+    end
+end
+```
+ - **largest_product_in_a_series_spec.rb** with the code:
+```ruby
+class LargestPrimeFactor
 
+end
+```
 
 ## Contributing
 

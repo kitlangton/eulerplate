@@ -30,11 +30,11 @@ module Eulerplate
       result.join("-")
     end
 
-    def test_name
+    def spec_file_name
       snake_name + "_spec.rb"
     end
 
-    def ruby_file_name
+    def class_file_name
       snake_name + ".rb"
     end
 

@@ -5,7 +5,8 @@ module Eulerplate
 
     desc 'new NUMBER', 'creates a new file structure for problem NUMBER'
     def new(number)
-      problem = Eulerplate::FolderCreator.new.for_problem(number)
+      problem = Eulerplate::Problems.get(4)
+      Eulerplate::Generators::ProblemKit.new(problem).generate
       say "Created the folder:"
       say "./#{ problem.folder_name }", :green
       say "And the files:"
