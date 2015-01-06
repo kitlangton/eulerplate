@@ -1,0 +1,4 @@
+#!/usr/bin/env ruby
+require "eulerplate"
+
+Eulerplate::CLI.start
