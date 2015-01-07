@@ -27,7 +27,9 @@ Feature: Generating problem bootstraps
 
     describe LargestPrimeFactor do
       it 'verifies the example' do
-        skip
+        skip 'write a test using the example given above'
       end
+
+      it 'leads you toward the solution'
     end
     """

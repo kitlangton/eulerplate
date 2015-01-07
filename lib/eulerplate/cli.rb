@@ -5,16 +5,12 @@ module Eulerplate
 
     desc 'new NUMBER', 'creates a new file structure for problem NUMBER'
     def new(number)
-      problem = Eulerplate::Problems.get(4)
-      Eulerplate::Generators::ProblemKit.new(problem).generate
-      say "Created the folder:"
-      say "./#{ problem.folder_name }", :green
-      say "And the files:"
-      say "#{ problem.ruby_file_name }", :green
-      say "#{ problem.test_name }", :green
-      say "for Problem #{ problem.number }: #{ problem.name }"
-    rescue
-      say "HEY: That folder already exists!", :bold
+      problem = Eulerplate::Problems.get(number)
+      Eulerplate::Generators::ProblemKit.start([problem])
+    end
+
+    def self.source_root
+      File.dirname(__FILE__) + "/templates"
     end
 
   end

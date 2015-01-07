@@ -1,0 +1,11 @@
+<%= problem.spec_description %>
+
+require_relative '<%= problem.snake_name %>'
+
+describe <%= problem.class_name %> do
+  it 'verifies the example' do
+    skip 'write a test using the example given above'
+  end
+
+  it 'leads you toward the solution'
+end

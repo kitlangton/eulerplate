@@ -3,7 +3,7 @@ require 'nokogiri'
 
 module Eulerplate
   class Problems
-    def problem(number)
+    def self.get(number)
       page = Nokogiri::HTML(open("https://projecteuler.net/problem=#{number}"))
       name = page.css('h2')[0].text
       number = page.css('#problem_info')[0].text.scan(/\d+/)[0].to_i
@@ -44,7 +44,7 @@ module Eulerplate
       result.join("_")
     end
 
-    def spec_body
+    def spec_description
       header = []
       header << "# PROBLEM #{number}: #{name}"
       header << "# https://projecteuler.net/problem=#{number}"
@@ -52,21 +52,7 @@ module Eulerplate
       header << problem.lines.map { |line| "# #{line}" }.join
       header << "#"
       header << "# WRITE YOUR TESTS!"
-      header << "\n"
-      header << "require_relative '#{snake_name}'"
-      header << "\n"
-      header << "describe #{class_name} do"
-      header << "  it 'verifies the example' do"
-      header << "    skip"
-      header << "  end"
-      header << "end"
-    end
-
-    def ruby_body
-      body = []
-      body << "class #{class_name}"
-      body << ""
-      body << "end"
+      header.join("\n")
     end
 
     def class_name
