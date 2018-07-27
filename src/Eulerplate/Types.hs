@@ -1,10 +1,10 @@
-{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE StrictData        #-}
 
 module Eulerplate.Types where
 
-import qualified Data.ByteString as BS
-import           Data.Text       as T
-import Eulerplate.Parser
+import qualified Data.ByteString               as BS
+import           Data.Text                     as T
+import           Eulerplate.Parser
 
 data Challenge = Challenge
   { url         :: String

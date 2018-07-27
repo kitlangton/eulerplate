@@ -4,31 +4,45 @@
 
 module Eulerplate.Renderer where
 
-import           Data.Text
+import           Data.Text hiding (init, length)
 import           Eulerplate.Parser
 import           Eulerplate.Types
 import           Text.Casing           (camel)
 import           Text.Shakespeare.Text
+import Turtle
+
+generateChallenge :: Challenge -> IO ()
+generateChallenge challenge@Challenge {..} = do
+  mktree $ fromText folderPath
+  writeTextFile (fromText filePath) (renderChallenge challenge)
+  where
+    folderPath = "./" <> intercalate "/" (init breadcrumbs) <> "/"
+    filePath = folderPath <> title <> ".hs"
 
 renderChallenge :: Challenge -> Text
 renderChallenge Challenge {..} =
-  [st|module #{Data.Text.intercalate "." breadcrumbs} where
+  [st|-- Eulerplate generated module for #{title}
+-- Challenge url: #{url}.
+module #{Data.Text.intercalate "." breadcrumbs} where
 
-#{camelTitle} :: #{renderTypeList " -> " inputTypes} -> (#{renderTypeList ", " outputTypes})
+-- Write your solution in here.
+-- We've attempted to parse the types from the problem sets,
+-- but feel free to change it in case we messed up :)
+#{camelTitle} :: #{renderTypeList " -> " inputTypes} -> #{renderTuple outputTypes}
 #{camelTitle} = undefined
 
 main :: IO ()
 main = do
-  (#{renderArguments ", " inputTypes}) <- getInput
+  #{renderTuple inputTypes} <- getInput
   printOutput $ #{camelTitle} #{renderArguments " " inputTypes}
 
-getInput :: IO (#{renderTypeList ", " inputTypes})
+getInput :: IO #{renderTuple inputTypes}
 getInput = do
   #{renderInputs inputTypes}
-  return (#{renderArguments ", " inputTypes})
+  return #{renderTuple inputTypes}
 
-printOutput :: (#{renderTypeList ", " outputTypes}) -> IO ()
+printOutput :: #{renderTuple outputTypes} -> IO ()
 printOutput #{renderArguments " " outputTypes} = do
-  print a
+  #{renderOutputs outputTypes}
 |]
   where camelTitle = camel $ unpack title
