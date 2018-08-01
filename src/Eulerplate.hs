@@ -3,10 +3,10 @@
 {-# LANGUAGE StrictData        #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving        #-}
 
-
 module Eulerplate
   ( downloadChallenge
   , setProject
+  , setUpProject
   )
 where
 
@@ -16,7 +16,12 @@ import           Eulerplate.Fetcher
 import           Data.Text                      ( unpack )
 import           Turtle                  hiding ( header )
 import           Control.Monad.Except
+import           Control.Lens
 import           Data.Either
+import           Data.Yaml
+import           Data.HashMap.Strict            ( elems )
+import           Data.Aeson.Lens
+import           Data.Vector hiding (empty)
 
 newtype Settings = Settings {
   projectPath :: Text
@@ -34,7 +39,8 @@ handleError :: AppError -> IO ()
 handleError err = case err of
   NoConfig -> do
     print "You don't have a Haskell project path configured."
-    print "Run 'eulerplate --set-project' in a Haskell project directory."
+    print "Run 'eulerplate --init' to create a new project."
+    print "(or run 'eulerplate --set-project' in an extant project directory)"
 
 configPath = "~/.eulerplate"
 
@@ -49,12 +55,26 @@ setProject = do
   Right currentPath <- toText <$> pwd
   setProjectPath currentPath
 
+printYaml :: IO ()
+printYaml = do
+  value <- decodeFileThrow "./hacker-rank-hs/package.yaml" :: IO Value
+  let o =
+        value
+          &  key "tests"
+          .  members
+          .  key "dependencies"
+          .  _Array
+          %~ (<> fromList [String "hspec"])
+  print o
+
 setUpProject :: IO ()
 setUpProject = do
   print "Setting up Eulerplate project"
   result <- shell "stack new hacker-rank-hs" empty
-  print result
-
+  cd "hacker-rank-hs"
+  setProject
+  print "Successfully created hacker-rank-hs"
+  runApp (liftIO . print =<< getProjectPath)
 
 getProjectPath :: App Text
 getProjectPath = do
@@ -65,13 +85,10 @@ getProjectPath = do
 
 downloadChallenge :: String -> IO ()
 downloadChallenge challengeID = runApp $ do
-  liftIO $ print "downloading Challenge"
   projectPath <- getProjectPath
   liftIO $ runManaged $ do
+    liftIO $ print "Downloading Challenge"
     challenge <- getChallenge challengeID
-    liftIO . print $ challenge
-    liftIO . putStrLn . unpack $ renderChallenge challenge
-    liftIO . putStrLn . unpack $ renderTests challenge
     liftIO $ writeChallengeModule projectPath challenge
     liftIO $ writeSpecFile projectPath challenge
 

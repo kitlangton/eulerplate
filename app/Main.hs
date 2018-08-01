@@ -8,10 +8,11 @@ import           Data.Functor                   ( ($>) )
 
 -- Option Parsing
 type ChallengeID = String
-data Command = SetProject | DownloadChallenge ChallengeID
+data Command = NewProject | SetProject | DownloadChallenge ChallengeID
 
 commandParser :: Parser Command
-commandParser = downloadChallengeParser <|> setProjectParser
+commandParser =
+  downloadChallengeParser <|> setProjectParser <|> newProjectParser
 
 setProjectParser :: Parser Command
 setProjectParser = flag'
@@ -22,6 +23,13 @@ setProjectParser = flag'
        "Call from the root of the Haskell project you wish to use as your solution repo."
   )
 
+newProjectParser :: Parser Command
+newProjectParser = flag'
+  NewProject
+  (long "new" <> short 'n' <> help
+    "Creates a new Haskell project for your Hacker Rank solutions."
+  )
+
 downloadChallengeParser :: Parser Command
 downloadChallengeParser = DownloadChallenge <$> strOption
   (long "download" <> short 'd' <> metavar "CHALLENGE_ID" <> help
@@ -30,6 +38,7 @@ downloadChallengeParser = DownloadChallenge <$> strOption
 
 
 run :: Command -> IO ()
+run NewProject                      = setUpProject
 run SetProject                      = setProject
 run (DownloadChallenge challengeID) = downloadChallenge challengeID
 
