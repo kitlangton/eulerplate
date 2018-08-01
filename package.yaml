@@ -35,6 +35,8 @@ dependencies:
 - managed
 - shakespeare
 - casing
+- mtl
+- optparse-applicative
 
 library:
   source-dirs: src

@@ -18,6 +18,6 @@ data Challenge = Challenge
 
 data TestCase = TestCase
   { testCaseId :: Int
-  , input      :: Text
-  , output     :: Text
+  , input      :: TypeList
+  , output     :: TypeList
   } deriving (Show)

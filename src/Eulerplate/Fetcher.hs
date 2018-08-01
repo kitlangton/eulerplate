@@ -18,20 +18,21 @@ import qualified Data.Map                      as M
 import           Data.Maybe                     ( catMaybes
                                                 , fromJust
                                                 )
-import           Data.Text                      ( Text
+import           Data.Text                     as T
+                                                ( Text
                                                 , filter
                                                 , intercalate
                                                 , isPrefixOf
                                                 , pack
                                                 , unpack
                                                 )
+import           Text.Casing                    ( pascal )
 import           Data.Text.Encoding
 import           Data.Text.Read
 import           Data.Either                    ( fromRight )
 import           Data.Char                      ( isDigit )
 import           Filesystem.Path.CurrentOS      ( encodeString )
 import           Network.Wreq
-import           Text.Casing                    ( pascal )
 import           Text.HTML.TagSoup
 import           Turtle                         ( liftIO
                                                 , mktempdir
@@ -49,10 +50,15 @@ getChallenge challengeID = do
   return Challenge
     { url         = challengeUrl challengeID
     , testCases   = testCases
-    , title       = decodeUtf8 title
-    , inputTypes  = fromRight [] $ parseTypes input
-    , outputTypes = fromRight [] $ parseTypes output
-    , breadcrumbs = pack . pascal . unpack . decodeUtf8 <$> breadcrumbs
+    , title = pack . pascal . unpack . T.filter (/= ':') $ decodeUtf8 title
+    , inputTypes  = input
+    , outputTypes = output
+    , breadcrumbs = pack
+      .   pascal
+      .   unpack
+      .   T.filter (/= ':')
+      .   decodeUtf8
+      <$> breadcrumbs
     , description = ""
     }
 
@@ -102,23 +108,25 @@ getData = do
 getExample :: EntrySelector -> ZipArchive TestSource
 getExample entryName = do
   entryContent <- decodeUtf8 <$> getEntry entryName
-  let name = getEntryName entryName
-  let entryType = if Data.Text.isPrefixOf "input" name then Input else Output
-  let Right (entryId, _) = decimal (Data.Text.filter isDigit name)
+  let name               = getEntryName entryName
+  let entryType          = if T.isPrefixOf "input" name then Input else Output
+  let Right (entryId, _) = decimal (T.filter isDigit name)
   return $ TestSource entryType entryId entryContent
 
 organizeEntries :: [TestSource] -> [TestCase]
-organizeEntries entries =
-  let inputs  = Prelude.filter ((== Input) . sourceType) entries
+organizeEntries entries
+  = let
+      inputs  = Prelude.filter ((== Input) . sourceType) entries
       outputs = Prelude.filter ((== Output) . sourceType) entries
       sourceToCase source = do
         outputSource <- find ((sourceId source ==) . sourceId) outputs
         return TestCase
           { testCaseId = sourceId source
-          , input      = sourceContent source
-          , output     = sourceContent outputSource
+          , input = fromRight [] . parseTypes . sourceContent $ source
+          , output = fromRight [] . parseTypes . sourceContent $ outputSource
           }
-  in  catMaybes $ sourceToCase <$> inputs
+    in
+      catMaybes $ sourceToCase <$> inputs
 
 getTestCases :: MonadManaged m => String -> m [TestCase]
 getTestCases challengeID = do
