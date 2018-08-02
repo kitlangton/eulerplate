@@ -1,4 +1,4 @@
-# Eulerplate
+# Eulerplate 🧙‍
 
 A tool for generating Haskell boilerplate for solving Hacker Rank challenges.
 
