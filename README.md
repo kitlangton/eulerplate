@@ -47,8 +47,6 @@ printOutput (a) = do
   print a
 ```
 
-and
-
 ```
 -- Eulerplate generated spec for DivisibleSumPairs
 -- Challenge url: https://www.hackerrank.com/challenges/divisible-sum-pairs/problem.
