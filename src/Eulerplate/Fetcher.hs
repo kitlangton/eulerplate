@@ -62,7 +62,6 @@ getChallenge challengeID = do
     , description = ""
     }
 
-
 getTitleAndBreadcrumbs :: String -> IO (BS.ByteString, [BS.ByteString])
 getTitleAndBreadcrumbs challengeID = do
   tags <- parseTags <$> fetchPage (challengeUrl challengeID)

@@ -13,19 +13,10 @@ where
 import           Control.Monad.Managed
 import           Eulerplate.Renderer
 import           Eulerplate.Fetcher
-import           Data.Text                      ( unpack )
-import           Turtle                  hiding ( header )
+import           Turtle                  hiding ( header
+                                                , err
+                                                )
 import           Control.Monad.Except
-import           Control.Lens
-import           Data.Either
-import           Data.Yaml
-import           Data.HashMap.Strict            ( elems )
-import           Data.Aeson.Lens
-import           Data.Vector hiding (empty)
-
-newtype Settings = Settings {
-  projectPath :: Text
-}
 
 data AppError = NoConfig
 
@@ -55,22 +46,12 @@ setProject = do
   Right currentPath <- toText <$> pwd
   setProjectPath currentPath
 
-printYaml :: IO ()
-printYaml = do
-  value <- decodeFileThrow "./hacker-rank-hs/package.yaml" :: IO Value
-  let o =
-        value
-          &  key "tests"
-          .  members
-          .  key "dependencies"
-          .  _Array
-          %~ (<> fromList [String "hspec"])
-  print o
-
 setUpProject :: IO ()
 setUpProject = do
   print "Setting up Eulerplate project"
-  result <- shell "stack new hacker-rank-hs" empty
+  _ <- shell
+    "stack new hacker-rank-hs https://github.com/kitlangton/eulerplate/raw/master/eulerplate-template.hsfiles"
+    empty
   cd "hacker-rank-hs"
   setProject
   print "Successfully created hacker-rank-hs"

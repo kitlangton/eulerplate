@@ -1,15 +1,7 @@
+name: eulerplate
+version: 0.1.0.0
 library:
   source-dirs: src
-tests:
-  eulerplate-test:
-    source-dirs: test
-    main: Spec.hs
-    ghc-options:
-    - -threaded
-    - -rtsopts
-    - -with-rtsopts=-N
-    dependencies:
-    - eulerplate
 copyright: 2018 Kit Langton
 maintainer: kitlangton@gmail.com
 dependencies:
@@ -34,16 +26,20 @@ dependencies:
 - yaml
 - lens-aeson
 - unordered-containers
-name: eulerplate
-version: 0.1.0.0
 extra-source-files:
 - README.md
 - ChangeLog.md
 author: Kit Langton
 github: kitlangton/eulerplate
 license: BSD3
+ghc-options:
+- -fwarn-tabs
+- -fwarn-incomplete-uni-patterns
+- -fwarn-incomplete-record-updates
+- -optP-Wno-nonportable-include-path # workaround [Filename case on macOS · Issue #4739 · haskell/cabal](https://github.com/haskell/cabal/issues/4739)
+
 executables:
-  eulerplate-exe:
+  eulerplate:
     source-dirs: app
     main: Main.hs
     ghc-options:
@@ -52,4 +48,15 @@ executables:
     - -with-rtsopts=-N
     dependencies:
     - eulerplate
-description: Please see the README on GitHub at <https://github.com/githubuser/eulerplate#readme>
+description: Please see the README on GitHub at <https://github.com/kitlangton/eulerplate#readme>
+
+tests:
+  eulerplate-test:
+    source-dirs: test
+    main: Spec.hs
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - eulerplate

@@ -4,7 +4,6 @@ module Main where
 
 import           Eulerplate
 import           Options.Applicative
-import           Data.Functor                   ( ($>) )
 
 -- Option Parsing
 type ChallengeID = String
@@ -43,10 +42,7 @@ run SetProject                      = setProject
 run (DownloadChallenge challengeID) = downloadChallenge challengeID
 
 main :: IO ()
-main = do
-  print "Running"
-  run =<< execParser opts
-  print "Ran"
+main = run =<< execParser opts
  where
   opts = info
     commandParser

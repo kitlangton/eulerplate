@@ -1,7 +1,19 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE StrictData        #-}
 
-module Eulerplate.Parser where
+module Eulerplate.Parser
+  ( parseTypes
+  , renderValueTuple
+  , renderTuple
+  , renderArguments
+  , renderOutputs
+  , renderInputs
+  , renderFunction
+  , renderTypeList
+  , TypeList
+  , TestType
+  )
+where
 
 import           Data.Text                      ( Text )
 import           Data.List                      ( intersperse )
@@ -49,8 +61,6 @@ tDouble = do
   doubleValue <- double
   guard $ doubleValue /= fromIntegral (round doubleValue)
   return $ TDouble doubleValue
-
--- Type Rendering
 
 maybeSurround :: Bool -> Text -> Text -> Text -> Text
 maybeSurround shouldSurround open close body =
@@ -105,5 +115,3 @@ renderValueTuple typeList = maybeSurround (length typeList > 1) "(" ")" body
 renderFunction :: Text -> TypeList -> Text
 renderFunction functionName typeList =
   T.intercalate " " $ functionName : (renderValue <$> typeList)
-
--- Value Rendering

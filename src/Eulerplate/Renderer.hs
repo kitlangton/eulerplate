@@ -9,7 +9,7 @@ import           Eulerplate.Parser
 import           Eulerplate.Types
 import           Text.Casing           (camel)
 import           Text.Shakespeare.Text
-import Turtle
+import Turtle    hiding (input)
 
 writeChallengeModule :: Text -> Challenge -> IO ()
 writeChallengeModule projectPath challenge@Challenge {..} = do
