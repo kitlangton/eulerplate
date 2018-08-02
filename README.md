@@ -7,13 +7,12 @@ A tool for generating Haskell boilerplate for solving Hacker Rank challenges.
 
 ## Set Up
 
-1. `git clone` this repo.
-2. `cd` into the repo and run `stack install`.
-3. Run `eulerplate --new` where you'd like to create the `hacker-rack-hs` project folder.
+1. Clone this repo (`git clone git@github.com:kitlangton/eulerplate.git`).
+2. Then `cd eulerplate` and run `stack install`.
+3. Run `eulerplate --new` where you'd like to create the `hacker-rank-hs` project folder.
 4. Start downloading challenges (see Example).
 
 ## Example
-
 
 Say you're working on the Hacker Rank challenge [Divisble Sum Pairs](https://www.hackerrank.com/challenges/divisible-sum-pairs/problem). 
 
